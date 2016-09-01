@@ -38,48 +38,20 @@ def choice(table, player_num)
   table
 end
 
-def judge(table)
-  o_count=[0,0,0,0]  # 縦, 横, 右斜め, 左斜め確認用配列
-  x_count=[0,0,0,0]
+def judge(table, player_num)
+  mark = player_num.zero? ? "o" : "x"
+  count = Array.new(4, 0)
   3.times do |i|
-    o_count[0..1]=[0, 0]
-    x_count[0..1]=[0, 0]
+    count[0..1]=[0, 0]
     3.times do |j|
-      if(table[i * 2][j * 2] == "o") # 縦列のoxカウント
-        o_count[0] += 1
-      elsif(table[i * 2][j * 2] == "x")
-        x_count[0] += 1
-      end
-      if(table[j * 2][i * 2] == "o") # 横列のoxカウント
-        o_count[1] += 1
-      elsif(table[j * 2][i * 2] == "x")
-        x_count[1] += 1
-      end
+      table[i * 2][j * 2] == mark ? count[0] += 1 : nil  # 横のカウント
+      table[j * 2][i * 2] == mark ? count[1] += 1 : nil  # 縦のカウント
     end
-    if(o_count[0] == 3 || o_count[1] == 3) # 縦・横列でoが揃っているとき
-      return 1
-    elsif(x_count[0] == 3 || x_count[1] == 3) # 縦・横列でxが揃っているとき
-      return 2
-    end
-
-    if(table[i * 2][i * 2] == "o") # 右斜め列のoxカウント
-      o_count[2] += 1
-    elsif(table[i * 2][i * 2] == "x")
-      x_count[2] += 1
-    end
-    if(table[i * 2][4 - i * 2] == "o") # 左斜め列のカウント
-      o_count[3] += 1
-    elsif(table[i * 2][4 - i * 2] == "x")
-      x_count[3] += 1
-    end
+    count.include?(3) ? (return player_num + 1) : nil  # 横か縦の列が揃っていたら勝者の番号を返す
+    table[i * 2][i * 2] == mark ? count[2] += 1 : nil  # 右斜めのカウント
+    table[i * 2][4 - i * 2] == mark ? count[3] += 1 : nil  # 左斜めのカウント
   end
-  if(o_count[2] == 3 || o_count[3] == 3)  # 斜め列でoが揃っているとき
-    return 1
-  elsif(x_count[2] == 3 || x_count[3] == 3)  # 斜め列でxが揃っているとき
-    return 2
-  end
-
-  0  # どの列も揃っていないとき
+  return count.include?(3) ? player_num + 1 : 0  # 斜めの列が揃っていたら勝者の番号を返す
 end
 
 # 表の作成
@@ -108,11 +80,11 @@ winner = 0  # winnerの初期化
     " player2(x) : please choose coordinates"
   table = choice(table, i%2)
   if i >= 4  # 一方が3個以上選択したとき
-    winner = judge(table)
+    winner = judge(table, i%2)
     winner.zero? ? nil : break
   end
 end
-
+print_table(table)
 # ゲーム終了
 puts winner.zero? ?
   " draw game..." :  # 引き分けの時
