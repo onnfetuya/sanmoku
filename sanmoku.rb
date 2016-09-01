@@ -2,9 +2,6 @@
 def input_xy
   print " "
   x, y = gets.split.map(&:to_i)
-  x ||= 0  # 入力がないとき0を代入
-  y ||= 0
-  return x, y
 end
 
 # 表を表示するメソッド
@@ -20,27 +17,25 @@ end
 
 # 記号を正しい座標に入力させるメソッド
 def choice(table, player_num)
-  x, y = input_xy
+  x, y = [0, 0]
   loop do  # 正しい入力がされない間ループ
-    # 座標外を入力されたとき
-    if (!(1..3).include?(x) || !(1..3).include?(y))
+    x, y = input_xy
+    # 座標外または"1a"(値は1)などを入力されたとき
+    if (!(1..3).include?(x) || !(1..3).include?(y) || x.to_s.size!=1 || y.to_s.size!=1)
       puts " please insert x y in intger(1 <= (x, y) <= 3)"
-      puts " \"x y\"(x and space and y in lower case)"
-      x, y = input_xy
+      puts ' "x y" (x and space and y in lower case)'
     # 記号が入っている座標を入力されたとき
     elsif table[(x - 1) * 2][(y - 1) * 2]!=" "
       puts " there is a mark, choose empty coordinates"
       puts " please insert other coordinates"
-      x, y = input_xy
     # 正しい座標を入力されたとき
     else
       break
     end
   end
-    
-    table[(x - 1) * 2][(y - 1) * 2] = player_num.zero? ? "o" : "x"
-    print_table(table)
-    return table
+  table[(x - 1) * 2][(y - 1) * 2] = player_num.zero? ? "o" : "x"
+  print_table(table)
+  table
 end
 
 def judge(table)
@@ -84,7 +79,7 @@ def judge(table)
     return 2
   end
 
-  return 0  # どの列も揃っていないとき
+  0  # どの列も揃っていないとき
 end
 
 # 表の作成
@@ -97,7 +92,7 @@ end
 # 説明
 puts " please choose coordinates"
 puts " insert x y in intger(1<=(x, y)<=3)"
-puts " for example, you(o) insert \"1 3\"..."
+puts ' for example, you(o) insert "1 3"...'
 table[0][4]="o"
 print_table(table)
 table[0][4]=" "
