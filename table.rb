@@ -1,4 +1,4 @@
-require "./sanmoku_Game.rb"
+require "./player.rb"
 
 # 表に関するクラス
 class Table
@@ -10,9 +10,9 @@ class Table
     end
   end
 
-  def init(x, y)  # 引数の座標に記号を代入する
+  def init!(x, y)  # 引数の座標に記号を代入する
     @@table[(x - 1) * 2][(y - 1) * 2] = 
-      Game.new.player_num.zero? ? "o" : "x"
+      Player.new.player_num.zero? ? "o" : "x"
     print_table
   end
 

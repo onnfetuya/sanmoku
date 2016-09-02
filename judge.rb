@@ -1,6 +1,6 @@
-require "./sanmoku_Game.rb"
-require "./sanmoku_Rule.rb"
-require "./sanmoku_Table.rb"
+require "./player.rb"
+require "./sentence.rb"
+require "./table.rb"
 
 # 勝敗を確認するモジュール
 module Judge
@@ -25,14 +25,14 @@ module Judge
     count
   end
 
-  def judge  # 列が揃っているか
-    mark = Game.new.player_num.zero? ? "o" : "x"
-    3.times do |i|
-      if ([row(mark, i + 1), column(mark, i + 1)].include?(3) || diagonal(mark).include?(3)) ?
-        Rule.finish(Game.new.player_num + 1) : nil
-      end
-    end
+  def counter?(i)
+    mark = Player.new.player_num.zero? ? "o" : "x"
+    [row(mark, i), column(mark, i)].include?(3) || diagonal(mark).include?(3)
   end
 
-  module_function :row, :column, :diagonal, :judge
+  def judge  # 列が揃っているか
+    3.times { |i| counter?(i + 1) ? Sentence.finish(Player.new.player_num + 1) : nil }
+  end
+
+  module_function :row, :column, :diagonal, :counter?, :judge
 end

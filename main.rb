@@ -1,5 +1,9 @@
-require "./sanmoku_Rule.rb"
-require "./sanmoku_Game.rb"
+require "./player.rb"
+require "./sentence.rb"
+require "./table.rb"
 
-Rule.description  # 説明
-Game.new.play # ゲーム開始
+Sentence.description  # 説明
+table = Table.new  # 表の作成と表示
+table.make
+table.print_table
+Player.new.play # ゲーム開始
